@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ycy.dao.ShowerDao">
+
+<!--    初步改好-->
+<!--获取当前用户的所有信息-->
+    <select id="getAllShowerList"  resultType="com.ycy.pojo.Shower">
+        SELECT myid,parentid,mytype,username,path,sname,ischecked,mydate FROM myshower where parentid=#{parentid} LIMIT #{begin},#{pageSize};
+    </select>
+<!--管理员获取所有用户的图片信息-->
+<!--    初步改好-->
+    <select id="getFileShowerList" resultType="com.ycy.pojo.Shower">
+        SELECT myid,parentid,mytype,username,path,sname,ischecked,mydate FROM myshower where mytype=#{mytype} LIMIT #{begin},#{pageSize};
+--      select * from javatest.myfile
+    </select>
+
+<!--获取所有未审核图片信息-->
+<!--    初步改好-->
+    <select id="getCheckingFileShowerList" resultType="com.ycy.pojo.Shower">
+        SELECT myid,parentid,mytype,username,path,sname,ischecked,mydate FROM myshower where ischecked="no" LIMIT #{begin},#{pageSize};
+--      select * from javatest.myfile where ischecked="yes"
+    </select>
+
+
+    <!--查看对应url的图片是否存在-->
+    <select id="queryForFile" resultType="com.ycy.pojo.Shower">
+        SELECT * FROM myshower where path=#{url}
+    </select>
+<!--由一个shower对象去查询一个shower对象-->
+
+<!--    改好了-->
+    <select id="getMyShower" resultType="com.ycy.pojo.Shower">
+        SELECT * FROM myshower where (username,sname) in((#{username},#{sname}))
+    </select>
+
+
+<!--查看所有文件(管理员）的数量-->
+    <select id="queryForFileCount" resultType="int">
+        SELECT count(*) FROM myshower where mytype="file";
+    </select>
+<!--查看所有未审核图片(管理员)数量-->
+    <select id="queryForCheckingFileCount" resultType="int">
+        SELECT count(*) FROM myshower where (mytype,ischecked) IN(("file","no"));
+    </select>
+
+<!--改好-->
+<!--查看自己对应目录下的图片以及文件夹总数（包括未审核）-->
+    <select id="queryForAllCount" parameterType="int" resultType="int">
+        SELECT count(*) FROM myshower where parentid=#{parentid}
+    </select>
+
+<!--更新审核状态,改为审核通过yes-->
+    <update id="updateFileShower" parameterType="com.ycy.pojo.Shower">
+        update javatest.myshower set ischecked="yes" where myid=#{myid}
+    </update>
+
+
+<!--    改好了-->
+<!--    插入Shower(图片或文件夹)-->
+        <insert id="addShower" parameterType="com.ycy.pojo.Shower">
+            insert into javatest.myshower ( parentid,mytype,username,path,sname,ischecked,mydate) value ( #{parentid},#{mytype},#{username},#{path},#{sname},#{ischecked},#{mydate})
+        </insert>
+
+<!--改好-->
+    <select id="getRootIdByUserName" resultType="int">
+        SELECT myid FROM myshower WHERE (mytype,sname) IN(("folder",#{sname}))
+    </select>
+
+<!--    改好了-->
+        <delete id="deleteShower" >
+            delete from javatest.myshower where myid=#{myid}
+        </delete>
+
+    <select id="getShowerById" resultType="com.ycy.pojo.Shower">
+        SELECT * FROM myshower WHERE myid=#{id}
+    </select>
+
+</mapper>
+        <!--直接放resources目录下就好-->
