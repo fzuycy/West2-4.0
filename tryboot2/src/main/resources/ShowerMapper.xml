@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ycy.dao.ShowerDao">
+<!--获取当前用户所有信息-->
+    <select id="getAllShowerList"  resultType="com.ycy.pojo.Shower">
+        SELECT mytype,sname,username,mydate,ischecked,path FROM shower where username=#{username} LIMIT #{begin},#{pageSize};
+--      select * from javatest.myfile
+    </select>
+<!--管理员获取所有用户的图片信息-->
+    <select id="getFileShowerList" resultType="com.ycy.pojo.Shower">
+        SELECT mytype,sname,username,mydate,ischecked,path FROM shower where mytype=#{mytype} LIMIT #{begin},#{pageSize};
+--      select * from javatest.myfile
+    </select>
+<!--获取所有未审核图片信息-->
+    <select id="getCheckingFileShowerList" resultType="com.ycy.pojo.Shower">
+        SELECT mytype,sname,username,mydate,ischecked,path FROM shower where ischecked="no" LIMIT #{begin},#{pageSize};
+--      select * from javatest.myfile where ischecked="yes"
+    </select>
+
+
+    <!--查看对应url的图片是否存在-->
+    <select id="queryForFile" resultType="com.ycy.pojo.Shower">
+        SELECT * FROM shower where path=#{url}
+    </select>
+<!--由一个shower对象去查询一个shower对象-->
+
+    <select id="getMyShower" resultType="com.ycy.pojo.Shower">
+        SELECT * FROM shower where (username,sname) in((#{username},#{sname}))
+    </select>
+
+
+<!--查看所有文件(管理员）的数量-->
+    <select id="queryForFileCount" resultType="int">
+        SELECT count(*) FROM shower where mytype="file";
+--      select * from javatest.myfile
+    </select>
+<!--查看所有未审核图片(管理员)数量-->
+    <select id="queryForCheckingFileCount" resultType="int">
+        SELECT count(*) FROM shower where (mytype,ischecked) IN(("file","no"));
+    </select>
+<!--查看所有自己的图片总数（包括未审核）-->
+    <select id="queryForAllCount" resultType="int">
+        SELECT count(*) FROM shower where username=#{username}
+    </select>
+
+<!--更新审核状态,改为审核通过yes-->
+    <update id="updateFileShower" parameterType="com.ycy.pojo.Shower">
+        update javatest.shower set ischecked=#{res} where (path,mytype) IN((#{url},#{mytype}))
+    </update>
+
+        <insert id="addShower" parameterType="com.ycy.pojo.Shower">
+            insert into javatest.shower (mytype, path,mydate,sname,username,ischecked) value (#{mytype},#{path},#{mydate},#{sname},#{username},#{ischecked})
+        </insert>
+
+
+<!--    这边写一个通过用户名和文件名(可以先封装为对象)得到shower对象的方法-->
+
+
+
+<!--    更新时先利用得到的用户名和文件名生成相应对象，然后直接以shower对象为参数-->
+<!--        <update id="updateShower" parameterType="com.ycy.pojo.Shower">-->
+<!--            update javatest.shower set ischecked=#{ischecked} where path=#{path}-->
+<!--        </update>-->
+
+        <delete id="deleteShower" >
+            delete from javatest.shower where path=#{path}
+        </delete>
+
+    <!--    <select id="getUserById" parameterType="int" resultType="com.User">-->
+    <!--        select * from javatest.mytable_three where id = #{id}-->
+    <!--&#45;&#45;         可以加英文分号,也可以不加-->
+    <!--    </select>-->
+
+    <!--    <update id="updateUser" parameterType="com.User">-->
+    <!--        update javatest.mytable_three set name=#{name},email=#{email} where id=#{id}-->
+    <!--    </update>-->
+
+    <!--    <delete id="deleteUser" parameterType="int">-->
+    <!--        delete from javatest.mytable_three where id=#{id}-->
+    <!--    </delete>-->
+</mapper>
+        <!--直接放resources目录下就好-->
