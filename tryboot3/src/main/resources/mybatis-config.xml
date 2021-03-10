@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--    下面注释的这个是多余的，不能这样写-->
+    <!--    <properties>-->
+    <!--        <property name="driver" value="com.mysql.jdbc.Driver"/>-->
+    <!--    </properties>-->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/javatest?useSSL=true&amp;useUnicode=true&amp;characterEncoding=UTF-8"/>
+                <!--                ?useSSL=true&amp;useUnicode=true&amp;characterEncoding=UTF-8-->
+                <property name="username" value="root"/>
+                <property name="password" value="1330"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+<!--这里还要写映射-->
+
+    <mappers>
+        <mapper resource="UserMapper.xml"/>
+        <mapper resource="ShowerMapper.xml"/>
+    </mappers>
+</configuration>
